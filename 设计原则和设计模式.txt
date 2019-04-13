@@ -1,6 +1,4 @@
-```
-
-*标题：
+﻿*标题：
 ·前端开发者如何学习设计模式
 ·设计模式的来龙去脉
 ·系统学习设计模式
@@ -251,4 +249,7 @@ interface IDriver {
 ·semlinker,https://github.com/semlinker/typescript-design-patterns
 
 
-```
+
+
+
+
