@@ -1,0 +1,1 @@
+﻿//实例：https://www.w3cplus.com/javascript/use-cases-for-es6-proxies.html
