@@ -1,18 +1,18 @@
-var bindClick = function (button, func) {
+ï»¿var bindClick = function (button, func) {
     button.onclick = func
 }
 
 var MenuBar = {
     refresh: function () {
-        console.log('Ë¢ĞÂ²Ëµ¥½çÃæ')
+        console.log('åˆ·æ–°èœå•ç•Œé¢')
     }
 }
 var SubMenu = {
     add: function () {
-        console.log('Ôö¼Ó×Ó²Ëµ¥')
+        console.log('å¢åŠ å­èœå•')
     },
     del: function () {
-        console.log('É¾³ı×Ó²Ëµ¥')
+        console.log('åˆ é™¤å­èœå•')
     }
 }
 

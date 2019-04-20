@@ -1,5 +1,5 @@
-
-//µ÷ÓÃÕß
+ï»¿
+//è°ƒç”¨è€…
 class Invoker {
     private command: Command;
     public constructor(command: Command) {
@@ -9,15 +9,15 @@ class Invoker {
         this.command = command;
     }
     public call(): void {
-        console.log("µ÷ÓÃÕßÖ´ĞĞÃüÁîcommand...");
+        console.log("è°ƒç”¨è€…æ‰§è¡Œå‘½ä»¤command...");
         this.command.execute();
     }
 }
-//³éÏóÃüÁî
+//æŠ½è±¡å‘½ä»¤
 interface Command {
     execute(): void;
 }
-//¾ßÌåÃüÁî
+//å…·ä½“å‘½ä»¤
 class ConcreteCommand implements Command {
     private receiver: Receiver;
     constructor() {
@@ -27,10 +27,10 @@ class ConcreteCommand implements Command {
         this.receiver.action();
     }
 }
-//½ÓÊÕÕß
+//æ¥æ”¶è€…
 class Receiver {
     public action(): void {
-        console.log("½ÓÊÕÕßµÄaction()·½·¨±»µ÷ÓÃ...");
+        console.log("æ¥æ”¶è€…çš„action()æ–¹æ³•è¢«è°ƒç”¨...");
     }
 }
 
@@ -38,13 +38,13 @@ class Client {
     public static main(): void {
         const cmd: Command = new ConcreteCommand();
         const ir: Invoker = new Invoker(cmd);
-        console.log("¿Í»§·ÃÎÊµ÷ÓÃÕßµÄcall()·½·¨...");
+        console.log("å®¢æˆ·è®¿é—®è°ƒç”¨è€…çš„call()æ–¹æ³•...");
         ir.call();
     }
 }
 Client.main()
 
 
-// ¿Í»§·ÃÎÊµ÷ÓÃÕßµÄcall()·½·¨...
-// µ÷ÓÃÕßÖ´ĞĞÃüÁîcommand...
-// ½ÓÊÕÕßµÄaction()·½·¨±»µ÷ÓÃ...
+// å®¢æˆ·è®¿é—®è°ƒç”¨è€…çš„call()æ–¹æ³•...
+// è°ƒç”¨è€…æ‰§è¡Œå‘½ä»¤command...
+// æ¥æ”¶è€…çš„action()æ–¹æ³•è¢«è°ƒç”¨...
