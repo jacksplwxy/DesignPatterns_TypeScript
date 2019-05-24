@@ -1,66 +1,90 @@
-export interface Mediator {
-    send(msg: string, colleague: Colleague): void
-}
 
-abstract class Colleague {
-    public mediator: Mediator
-    constructor(mediator: Mediator) {
-        this.mediator = mediator
-    }
-    abstract send(msg: string): void
-    abstract receive(msg: string): void
-}
 
-class ConcreteColleagueA extends Colleague {
-    constructor(mediator: Mediator) {
-        super(mediator)
-    }
-    public send(msg: string): void {
-        this.mediator.send(msg, this)
-    }
-    public receive(msg: string): void {
-        console.log(msg, "`receive` of ConcreteColleagueA is being called!")
-    }
-}
+/**
+ * 中介者：用于模块之间通信。
+ */
 
-class ConcreteColleagueB extends Colleague {
-    constructor(mediator: Mediator) {
-        super(mediator)
-    }
-    public send(msg: string): void {
-        this.mediator.send(msg, this)
-    }
-    public receive(msg: string): void {
-        console.log(msg, "`receive` of ConcreteColleagueB is being called!")
-    }
+//抽象中介者
+abstract class Mediator {
+    public abstract register(colleague: Colleague): void;
+    public abstract relay(cl: Colleague): void; //转发
 }
-
-class ConcreteMediator implements Mediator {
-    public concreteColleagueA: ConcreteColleagueA
-    public concreteColleagueB: ConcreteColleagueB
-    public send(msg: string, colleague: Colleague): void {
-        if (this.concreteColleagueA === colleague) {
-            this.concreteColleagueB.receive(msg)
-        } else {
-            this.concreteColleagueA.receive(msg)
+//具体中介者
+class ConcreteMediator extends Mediator {
+    private colleagues: Array<Colleague> = []
+    public register(colleague: Colleague): void {
+        if (this.colleagues.indexOf(colleague) === -1) {
+            this.colleagues.push(colleague)
+            colleague.setMedium(this)
         }
     }
-}
-
-
-class Client {
-    public static main(): void {
-        let cm: ConcreteMediator = new ConcreteMediator(),
-            c1: ConcreteColleagueA = new ConcreteColleagueA(cm),
-            c2: ConcreteColleagueB = new ConcreteColleagueB(cm)
-        cm.concreteColleagueA = c1
-        cm.concreteColleagueB = c2
-        c1.send("Hello ConcreteColleagueB")
-        c2.send("Hello ConcreteColleagueA")
+    public relay(cl: Colleague): void {
+        this.colleagues.forEach((colleague: Colleague, index) => {
+            if (cl !== colleague) {
+                colleague.receive()
+            }
+        })
     }
 }
-Client.main()
+//抽象同事类
+abstract class Colleague {
+    protected mediator: Mediator;
+    public setMedium(mediator: Mediator): void {
+        this.mediator = mediator;
+    }
+    public abstract receive(): void;
+    public abstract send(): void;
+}
+//具体同事类
+class ConcreteColleague1 extends Colleague {
+    constructor() {
+        super()
+    }
+    public receive(): void {
+        console.log("具体同事类1收到请求。");
+    }
+    public send(): void {
+        console.log("具体同事类1发出请求。");
+        this.mediator.relay(this); //请中介者转发
+    }
+}
+//具体同事类
+class ConcreteColleague2 extends Colleague {
+    constructor() {
+        super()
+    }
+    public receive(): void {
+        console.log("具体同事类2收到请求。");
+    }
+    public send(): void {
+        console.log("具体同事类2发出请求。");
+        this.mediator.relay(this); //请中介者转发
+    }
+}
+//具体同事类
+class ConcreteColleague3 extends Colleague {
+    constructor() {
+        super()
+    }
+    public receive(): void {
+        console.log("具体同事类3收到请求。");
+    }
+    public send(): void {
+        console.log("具体同事类3发出请求。");
+        this.mediator.relay(this); //请中介者转发
+    }
+}
 
-// Hello ConcreteColleagueB `receive` of ConcreteColleagueB is being called!
-// Hello ConcreteColleagueA `receive` of ConcreteColleagueA is being called!
-
+class ConcreteMediatorClient {
+    public static main(): void {
+        let md: Mediator = new ConcreteMediator();
+        let c1: Colleague = new ConcreteColleague1();
+        let c2: Colleague = new ConcreteColleague2();
+        let c3: Colleague = new ConcreteColleague3();
+        md.register(c1);
+        md.register(c2);
+        md.register(c3);
+        c1.send();
+        c2.send();
+    }
+}
