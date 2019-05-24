@@ -1,80 +1,89 @@
-// ³éÏóÖĞ½éÕß
-abstract class Mediator {
-    abstract contact(message: string, person: Human): void
+abstract class SmartDevice {
+    //ç›¸å…³è®¾å¤‡æ‰“å¼€ä¹‹å ä½¿å…¶è¿›å…¥å‡†å¤‡çŠ¶æ€
+    public abstract readyState(instruction: String): void
+    //æ“ä½œè¯¥è®¾å¤‡
+    public abstract operateDevice(instruction: String, mediator: SmartMediator): void
 }
 
-// ³éÏóÍ¬ÊÂÀà
-abstract class Human {
-    name: string
-    mediator: Mediator
-    constructor(name: string, mediator: Mediator) {
-        this.name = name
-        this.mediator = mediator
-    }
-}
 
-// 2¸ö¾ßÌåµÄÍ¬ÊÂÀà
-// ·¿Ö÷Àà
-class HouseOwner extends Human {
-    contact(message: string) {
-        console.log(`·¿Ö÷ ${this.name} ·¢ËÍÏûÏ¢ ${message}`)
-        this.mediator.contact(message, this)
+class CurtainDevice extends SmartDevice {
+    public operateDevice(instruction: String, mediator: SmartMediator): void {
+        console.log("çª—å¸˜å·²" + instruction)//é€šè¿‡ä¼ å…¥æŒ‡ä»¤ï¼Œæ‰“å¼€æˆ–å…³é—­çª—å¸˜
+        mediator.curtain(instruction)//çª—å¸˜é€šè¿‡ä¸­ä»‹è€…å”¤é†’éŸ³ä¹è®¾å¤‡å’Œæ´—æµ´è®¾å¤‡
     }
-    getMessage(message: string) {
-        console.log(`·¿Ö÷ ${this.name} ÊÕµ½ÏûÏ¢ ${message}`)
+    public readyState(instruction: String): void {
+        //å¦‚æœå…¶ä»–è®¾å¤‡å¼€å¯åˆ™è°ƒç”¨æ­¤æ–¹æ³•ï¼Œå”¤é†’çª—å¸˜
+        console.log("çª—å¸˜è®¾å¤‡å‡†å¤‡" + instruction)
     }
-}
 
-// ×â¿ÍÀà
-class Tenant extends Human {
-    contact(message: string) {
-        console.log(`×â¿Í ${this.name} ·¢ËÍÏûÏ¢ ${message}`)
-        this.mediator.contact(message, this)
-    }
-    getMessage(message: string) {
-        console.log(`×â¿Í ${this.name} ÊÕµ½ÏûÏ¢ ${message}`)
-    }
 }
+class MusicDevice extends SmartDevice {
+    public operateDevice(instruction: String, mediator: SmartMediator): void {
+        console.log("éŸ³ä¹è®¾å¤‡å·²" + instruction)
+        mediator.music(instruction)
+    }
+    public readyState(instruction: String): void {
+        console.log("éŸ³ä¹è®¾å¤‡å‡†å¤‡" + instruction)
+    }
 
-// ¾ßÌåÖĞ½éÕß
-class ConcreteMediator extends Mediator {
-    private tenant: Tenant
-    private houseOwner: HouseOwner
-    setTenant(tenant: Tenant) {
-        this.tenant = tenant
+}
+class BathDevice extends SmartDevice {
+    public operateDevice(instruction: String, mediator: SmartMediator): void {
+        console.log("æ´—æµ´è®¾å¤‡" + instruction)
+        mediator.bath(instruction)
     }
-    setHouseOwner(houseOwner: HouseOwner) {
-        this.houseOwner = houseOwner
+    public readyState(instruction: String): void {
+        console.log("æ´—æµ´è®¾å¤‡æ­£åœ¨å‡†å¤‡" + instruction)
     }
-    // ÓÉÖĞ½éÕßÀ´ÉèÖÃÍ¬ÊÂ¶ÔÏóÖ®¼äµÄÁªÏµ¹ØÏµ
-    contact(message: string, person: Human) {
-        console.log('ÖĞ½é´«µİÏûÏ¢')
-        if (person === this.houseOwner) {
-            this.tenant.getMessage(message)
-        } else {
-            this.houseOwner.getMessage(message)
-        }
+
+}
+abstract class SmartMediator {
+    //ä¿ç•™æ‰€æœ‰è®¾å¤‡çš„å¼•ç”¨æ˜¯ä¸ºäº†å½“æ¥æ”¶æŒ‡ä»¤æ—¶å¯ä»¥å”¤é†’å…¶ä»–è®¾å¤‡çš„æ“ä½œ
+    protected bd: SmartDevice
+    protected md: SmartDevice
+    protected cd: SmartDevice
+    public constructor(bd: SmartDevice, cd: SmartDevice, md: SmartDevice) {
+        this.bd = bd
+        this.cd = cd
+        this.md = md
+    }
+    public abstract music(instruction: String): void
+    public abstract curtain(instruction: String): void
+    public abstract bath(instruction: String): void
+}
+class ConcreteMediator extends SmartMediator {
+    public constructor(bd: SmartDevice, cd: SmartDevice, md: SmartDevice) {
+        super(bd, cd, md)
+    }
+    public music(instruction: String): void {//éŸ³ä¹è¢«å”¤é†’åï¼Œä½¿å…¶ä»–è®¾å¤‡è¿›å…¥å‡†å¤‡çŠ¶æ€
+        this.cd.readyState(instruction)//è°ƒç”¨çª—å¸˜çš„å‡†å¤‡æ–¹æ³•
+        this.bd.readyState(instruction)//è°ƒç”¨æ´—æµ´è®¾å¤‡çš„å‡†å¤‡æ–¹æ³•
+    }
+    public curtain(instruction: String): void {
+        this.md.readyState(instruction)
+        this.bd.readyState(instruction)
+    }
+    public bath(instruction: String): void {
+        this.cd.readyState(instruction)
+        this.md.readyState(instruction)
     }
 }
 
 class Client {
     public static main(): void {
-        const mediator = new ConcreteMediator()
-        const houseOwner = new HouseOwner('²Æ´óÆø´ÖµÄ·¿Êå', mediator)
-        const tenant = new Tenant('Ô¶·å', mediator)
-        // ÏòÖĞ½éÕß×¢²á³ÉÔ±
-        mediator.setHouseOwner(houseOwner)
-        mediator.setTenant(tenant)
-        // ÖĞ½éµÄ³ÉÔ±Ö»ĞèÒª·¢ËÍĞÅÏ¢£¬¶ø²»ĞèÒª¹ØĞÄ¾ßÌå½ÓÊÜÕß£¬ÁªÏµ¹ØÏµ¶¼Î¬»¤ÔÚÁËÖĞ½éÕßÖĞ
-        tenant.contact('ÎÒÏë×â·¿')
-        houseOwner.contact('ÎÒÓĞ·¿£¬ÄãÒª×âÂğ')
+        let bd: SmartDevice = new BathDevice()
+        let cd: SmartDevice = new CurtainDevice()
+        let md: SmartDevice = new MusicDevice()
+        let sm: SmartMediator = new ConcreteMediator(bd, cd, md)//æŠŠè®¾å¤‡å¼•ç”¨éƒ½ä¿å­˜åœ¨è°ƒåœè€…ä¸­
+        cd.operateDevice("open", sm) //å¼€å¯çª—å¸˜
+        md.operateDevice("close", sm)//å…³é—­éŸ³ä¹
     }
 }
 Client.main()
+// çª—å¸˜å·²open
+// éŸ³ä¹è®¾å¤‡å‡†å¤‡open
+// æ´—æµ´è®¾å¤‡æ­£åœ¨å‡†å¤‡open
 
-// ×â¿Í Ô¶·å ·¢ËÍÏûÏ¢ ÎÒÏë×â·¿
-// ÖĞ½é´«µİÏûÏ¢
-// ·¿Ö÷ ²Æ´óÆø´ÖµÄ·¿Êå ÊÕµ½ÏûÏ¢ ÎÒÏë×â·¿
-// ·¿Ö÷ ²Æ´óÆø´ÖµÄ·¿Êå ·¢ËÍÏûÏ¢ ÎÒÓĞ·¿£¬ÄãÒª×âÂğ
-// ÖĞ½é´«µİÏûÏ¢
-// ×â¿Í Ô¶·å ÊÕµ½ÏûÏ¢ ÎÒÓĞ·¿£¬ÄãÒª×âÂğ
+// éŸ³ä¹è®¾å¤‡å·²close
+// çª—å¸˜è®¾å¤‡å‡†å¤‡close
+// æ´—æµ´è®¾å¤‡æ­£åœ¨å‡†å¤‡close
