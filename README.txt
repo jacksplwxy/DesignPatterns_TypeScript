@@ -1,6 +1,5 @@
-﻿*标题：
+*标题：
 ·前端开发者如何学习设计模式
-·设计模式的来龙去脉
 ·系统学习设计模式
 ·TypeScript版设计模式
 
@@ -12,7 +11,7 @@
   ③因为设计模式很难验证对错，网络上存在大量错误的设计模式教程误导新人。
   ④设计模式资料普遍只讲述模式的实现步骤，缺乏对理解这些步骤的基础知识进行讲解，导致对设计模式的学习只是表面招式。
 ·项目内容：
-  ①帮助缺乏经验的前端开发者了解设计模式的来龙去脉，补充学习设计模式需要了解的基础知识，如：设计原则、解耦、控制反转、依赖注入、IoC容器、反射等。
+  ①帮助缺乏经验的前端开发者了解设计模式的来龙去脉，补充学习设计模式需要了解的基础知识，如：设计原则、解耦、控制反转、依赖注入、IoC容器、反射、注解、装饰器等。
   ②着重实现TypeScript版设计模式代码。
   ③补充实现Java/JavaScript版设计模式代码。
 ·理解有误处欢迎指出。
@@ -93,9 +92,6 @@
   常规我们认为上层模块应该依赖下层，但是这也有个问题就是，下层变动将导致“牵一发动全身”。依赖倒置就是反常规思维，将原本的高层建筑依赖底层建筑“倒置”过来，变成底层建筑依赖高层建筑。高层建筑决定需要什么，底层去实现这样的需求，但是高层并不用管底层是怎么实现的。这样就不会出现前面的“牵一发动全身”的情况。当然，严格的来说上层不应该依赖下层，而依赖自身接口，通过注入的方式依赖其他接口。
 ·控制反转（Inversion of Control）：就是依赖倒置原则的一种代码设计的思路。具体采用的实现方法就是所谓的依赖注入（Dependency Injection）。
 ·控制反转容器(IoC Container)：，因为采用了依赖注入，在初始化的过程中就不可避免的会写大量的new，并且还要要管理各个对象之间依赖关系，所以这里使用工厂方法还是比较麻烦。而IoC容器就解决以上2个问题。这个容器可以自动对你的代码进行初始化，你只需要维护一个Configuration（可以是xml可以是一段代码），而不用每次初始化一实例都要亲手去写那一大段初始化的代码。另外一个好处是：我们在创建实例的时候不需要了解其中的依赖细节。
-·ts实现IoC容器：
-  -- 《使用Typescript实现依赖注入（DI）》：https://blog.csdn.net/HaoDaWang/article/details/79776021
-  -- 《细数Javascript技术栈中的四种依赖注入》：http://www.cnblogs.com/front-end-ralph/p/5208045.html
 ·java的反射机制：
   -- 类也是对象，类是java.lang.Class类的实例对象
   -- 编译时刻加载类是静态加载类，运行时刻加载类是动态加载类。new创建对象是静态加载类，在编译时刻就要加载所有可能用到的类，这样导致某一个类（的类型）出现问题，其他所有类都将无法使用（无法通过编译）。通过动态加载类可以解决这个问题。动态加载的方法，即通过类的类类型创建该类的对象，示例：Class c=Class.forName(args[0]);c.newInstance();
@@ -108,45 +104,61 @@
   -- 因为反射的操作是编译后的，所以不存在类型检查问题了
   -- 小结：Java反射机制允许程序在运行时透过Reflection APIs取得任意一个已知名称的class的内部信息，包括modifiers（如public、static等）、superclass（如Object）、实现的interfaces（如Serializable）、fields（属性）和methods（方法）（但不包括methods定义），可于运行时改变fields的内容，也可调用methods.
   -- 配置文件+反射机制实现开闭原则：在引入配置文件和反射机制后，需要更换或增加新的具体类将变得很简单，只需增加新的具体类并修改配置文件即可，无须对现有类库和客户端代码进行任何修改，完全符合开闭原则。在很多设计模式中都可以通过引入配置文件和反射机制来对客户端代码进行改进，如在抽象工厂模式中可以将具体工厂类类名存储在配置文件中，在适配器模式中可以将适配器类类名存储在配置文件中，在策略模式中可以将具体策略类类名存储在配置文件中等等。通过对代码的改进，可以让系统具有更好的扩展性和灵活性，更加满足各种面向对象设计原则的要求。
+·java自定义注解：
+@Target({ElementType.METHOD,ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+public @interface Description{
+  String desc();
+  String author();
+  int age() default 18;
+}
+  -- 使用@interface关键词定义注解
+  -- 成员以无参无异常方式声明
+  -- 可以用default为成员指定一个默认值
+  -- 成员类型是受限制的，合法的类型包括原始类型及String,Class,Annotation,Enumeration
+  -- 如果注解只有一个成员，则成员名必须取名为value()，在使用时可以忽略成员名和赋值号(=)
+  -- 注解类可以没有成员，没有成员的注解成为标识注解
+  -- @Target、@Retention、@Inherited、@Documented为注解Description的注解，即元注解
+  -- @Target(options)中的options包括注解的作用域，该例中表示注解可以在方法和类中使用。完整的作用域项包括：CONSTRUCTOR(构造方法)、FIELD(字段)、LOCAL_VARIABLE(局部变量)、METHOD(方法)、PACKAGE(包)、PARAMETER(参数)、TYPE(类，接口)
+  -- @Retention()：注解生命周期，包括SOURCE(只在源码显示，编译时丢弃)、CLASS(编译时会记录到class中，运行时忽略)、RUNTIME(运行时存在，可以通过反射读取)
+  -- @Inherited：允许子注解继承,子类只能继承父类的类上的注解，不会继承成员上的注解
+  -- @Documented：生成javadoc时会包含注解信息
+  --使用自定义注解：
+@Description(desc='I am eyeColor',author='Jacksplwxy',age=18)
+public String eyeColor(){
+  return 'red';
+}
+·元数据：指用来描述数据的数据。
+·元数据和注解：注解可以用来描述数据，所有注解是元数据的一种实现方式。
+·注解的作用：注解有很多作用，其中最重要的一个就是搭配反射实现开闭原则。因为注解可以被反射解析出来，此时的注解相当于一个配置文件。另外，在java中，除了注解充当配置文件，还可以用xml作为配置文件，但注解优点明显：①在class文件中，可以降低维护成本，annotation的配置机制很明显简单；②不需要第三方的解析工具，利用java反射技术就可以完成任务；③编辑期可以验证正确性，差错变得容易；④ 提高开发效率
+·ts中的注解：ts中其实没有注解的概念，但是前端界曾经还是有语言借鉴了注解：Angular2的AtScript语言，它能完完全全的单纯附加元数据。例如：
+@Component({
+  selector: 'app'
+})
+class AppComponent {}
+  等价于
+class AppComponent {} 
+AppComponent.annotations = [
+  new Component({
+    selector: 'app'
+  })
+]
+·注解和装饰器区别：
+  -- 注解（Annotation）：java中元数据的一种实现方式。仅提供附加元数据支持，并不能实现任何操作。需要另外的 Scanner 根据元数据执行相应操作。
+  -- 装饰器（Decorator）：ES6中增加的对装饰器模式的简单实现。其仅提供定义劫持，能够对类及其方法的定义并没有提供任何附加元数据的功能。
+  他们语法相似，都是@符号。但注解仅仅为数据提供一些更加细节的属性描述，我们可以利用反射等方式来获取这些描述再进行函数操作。而装饰器可以相当于直接附加函数操作。实际上，两者在实现上都可以相互模拟。
 ·ts的反射机制实现：
-  -- ES6中新增了新的api：Reflect。Reflect能够获取到类中的成员变量和方法，但是无法获取究竟有哪些装饰器添加到这个类/方法上。为了获取到装饰器，Reflect Metadata应运而生。Reflect Metadata是ES7的一个提案，它主要用来在声明的时候添加和读取元数据。
-  -- 注解和装饰器的区别：https://blog.csdn.net/liwusen/article/details/86482476
-  -- 《详解学习Reflect Metadata》：https://www.jianshu.com/p/2abb2469bcbb
-  -- 《TS从装饰器到注解到元编程》：https://www.jianshu.com/p/e280d916495b
-·依赖注入的三种写法：
-  ①构造函数传递依赖对象：
-interface IDriver{
-    drive()：void ;//是司机就应该会驾驶汽车
-}
-public class Driver implements IDriver{
-    private car:ICar ;
-    //构造函数注入
-    public Driver( _car:ICar){
-        this.car = _car;
-    }   
-    //司机的主要职责就是驾驶汽车
-    public drive():void {
-        this.car.run();
-    }
-}
-  ②Setter方法传递依赖对象：
-interface IDriver {
-    public setCar( car:ICar):void ; //车辆型号
-    public drive():void ;//是司机就应该会驾驶汽车
-}
-public class Driver implements IDriver{
-    private car:ICar;
-    public setCar(car:ICar):void {
-        this.car = car;
-    }
-    public drive():void {
-        this.car.run();
-    }
-}
-  ③接口声明依赖对象：
-interface IDriver {  
-    drive( car:ICar):void ;  // 是司机就应该会驾驶汽车  
-}  
+  -- 回顾反射：反射就是根据类名获取其更详细信息
+  -- Function.prototype.toString实现反射：Function.prototype.toString这个原型方法可以帮助你获得函数的源代码，通过合适的正则, 我们可以从中提取出丰富的信息。但是并不方便，也不优雅。
+  -- JavaScript本身为动态语言，天生具备反射能力，例如遍历对象内所有属性、判断数据类型。ES6中新增了新的api：Reflect，来把这些操作归结到一起。Reflect能够获取到类中的成员变量和方法，但是由于js迎合了web的压缩特点，所以其无法获取到参数名。解决方案就是通过在方法上添加定义了参数相关的装饰器，再解析装饰器即可获取参数名了。可惜ES6的Reflect也无法获取到究竟有哪些装饰器添加到这个类/方法上。为了获取到装饰器，Reflect Metadata应运而生，它是ES7的一个提案，它主要用来在声明的时候添加和读取装饰器的。
+·依赖注入的三种方式：
+  -- 构造函数注入
+  -- 属性注入
+  -- 接口注入
+·ts实现IoC容器：
+  -- 《使用Typescript实现依赖注入（DI）》：https://blog.csdn.net/HaoDaWang/article/details/79776021
 ·里氏代换原则和依赖倒置原则一样，是开闭原则的具体实现手段之一。
 ·最佳实践：
   -- 每个类尽量都有接口或抽象类，或者抽象类和接口两者都具备：这是依赖倒置的基本要求，接口和抽象类都是属于抽象的，有了抽象才可能依赖倒置。
