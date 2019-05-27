@@ -6,19 +6,21 @@
 //抽象中介者
 abstract class Mediator {
     //存储
-    public colleagues: Array<Colleague> = []
+    public colleagues: Object = {}
     //注册
-    public register(colleague: Colleague): void {
-        if (this.colleagues.indexOf(colleague) === -1) {
-            this.colleagues.push(colleague)
+    public register(clName: string, colleague: Colleague): void {
+        if (this.colleagues[clName]) {
+            console.error(`${clName}名称已存在`)
+        } else {
+            this.colleagues[clName] = colleague
             colleague.setMedium(this)
         }
     }
     //转发
     public relay(cl: Colleague, message?: any): void {
-        this.colleagues.forEach((colleague: Colleague, index) => {
-            if (cl !== colleague) {
-                colleague.receive(message)
+        Object.keys(this.colleagues).forEach((clName: string) => {
+            if (this.colleagues[clName] !== cl) {
+                this.colleagues[clName].receive(message)
             }
         })
     }
@@ -33,7 +35,7 @@ abstract class Colleague {
         console.log(this.constructor.name + "收到请求：", message);
     }
     public send(message?: any): void {
-        console.log(this.constructor.name + "发出请求:", message);
+        console.log(this.constructor.name + "发出请求：", message);
         this.mediator.relay(this, message); //请中介者转发
     }
 }
@@ -91,9 +93,9 @@ class Client {
         let c1: Colleague = new ConcreteColleague1();
         let c2: Colleague = new ConcreteColleague2();
         let c3: Colleague = new ConcreteColleague3();
-        md.register(c1);
-        md.register(c2);
-        md.register(c3);
+        md.register('c1', c1);
+        md.register('c2', c2);
+        md.register('c3', c3);
         c1.send('大家嗨起来');
         c2.send('大家静下来');
     }
