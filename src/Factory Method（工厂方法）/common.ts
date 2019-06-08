@@ -1,4 +1,4 @@
-export interface Product {
+interface Product {
     use(param?: any): void
 }
 
