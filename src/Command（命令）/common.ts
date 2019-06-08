@@ -8,7 +8,7 @@ class Invoker {
     public setCommand(command: Command): void {
         this.command = command;
     }
-    public call(): void {
+    public run(): void {
         console.log("调用者执行命令command...");
         this.command.execute();
     }
@@ -38,13 +38,13 @@ class Client {
     public static main(): void {
         const cmd: Command = new ConcreteCommand();
         const ir: Invoker = new Invoker(cmd);
-        console.log("客户访问调用者的call()方法...");
-        ir.call();
+        console.log("客户访问调用者的run()方法...");
+        ir.run();
     }
 }
 Client.main()
 
 
-// 客户访问调用者的call()方法...
+// 客户访问调用者的run()方法...
 // 调用者执行命令command...
 // 接收者的action()方法被调用...
