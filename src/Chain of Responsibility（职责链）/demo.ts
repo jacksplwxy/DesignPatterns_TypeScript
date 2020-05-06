@@ -1,10 +1,10 @@
-interface RequestData {
+ï»¿interface RequestData {
     name: string,
     increaseNum: number,
 }
 
 /**
- * ³éÏó´¦ÀíÕß
+ * æŠ½è±¡å¤„ç†è€…
  */
 abstract class Handler {
     protected next: Handler;
@@ -17,10 +17,10 @@ abstract class Handler {
 class IdentityValidator extends Handler {
     processRequest(request: RequestData) {
         if (request.name === 'yuanfeng') {
-            console.log(`${request.name} ÊÇ±¾¹«Ë¾µÄÔ±¹¤`);
+            console.log(`${request.name} æ˜¯æœ¬å…¬å¸çš„å‘˜å·¥`);
             this.next.processRequest(request);
         } else {
-            console.log('²»ÊÇ±¾¹«Ë¾Ô±¹¤');
+            console.log('ä¸æ˜¯æœ¬å…¬å¸å‘˜å·¥');
         }
     }
 }
@@ -28,9 +28,9 @@ class IdentityValidator extends Handler {
 class Manager extends Handler {
     processRequest(request: RequestData) {
         if (request.increaseNum < 300) {
-            console.log('µÍÓÚ300µÄÕÇĞ½£¬¾­ÀíÖ±½ÓÅú×¼ÁË');
+            console.log('ä½äº300çš„æ¶¨è–ªï¼Œç»ç†ç›´æ¥æ‰¹å‡†äº†');
         } else {
-            console.log(`${request.name}µÄÕÇĞ½ÒªÇó³¬¹ıÁË¾­ÀíµÄÈ¨ÏŞ£¬ĞèÒª¸ü¸ß¼¶±ğÉóÅú`);
+            console.log(`${request.name}çš„æ¶¨è–ªè¦æ±‚è¶…è¿‡äº†ç»ç†çš„æƒé™ï¼Œéœ€è¦æ›´é«˜çº§åˆ«å®¡æ‰¹`);
             this.next.processRequest(request);
         }
     }
@@ -38,7 +38,7 @@ class Manager extends Handler {
 
 class Boss extends Handler {
     processRequest(request: RequestData) {
-        console.log('hehe£¬ÏëÕÇĞ½£¬Äã¿ÉÒÔ×ßÁË');
+        console.log('heheï¼Œæƒ³æ¶¨è–ªï¼Œä½ å¯ä»¥èµ°äº†');
     }
 }
 
@@ -49,7 +49,7 @@ class Client {
         const identityValidator = new IdentityValidator();
         const manager = new Manager();
         const boss = new Boss();
-        // ¹¹½¨Ö°ÔğÁ´
+        // æ„å»ºèŒè´£é“¾
         identityValidator.setNext(manager);
         manager.setNext(boss);
 
@@ -62,6 +62,6 @@ class Client {
 }
 Client.main()
 
-// yuanfeng ÊÇ±¾¹«Ë¾µÄÔ±¹¤
-// yuanfengµÄÕÇĞ½ÒªÇó³¬¹ıÁË¾­ÀíµÄÈ¨ÏŞ£¬ĞèÒª¸ü¸ß¼¶±ğÉóÅú
-// hehe£¬ÏëÕÇĞ½£¬Äã¿ÉÒÔ×ßÁË
+// yuanfeng æ˜¯æœ¬å…¬å¸çš„å‘˜å·¥
+// yuanfengçš„æ¶¨è–ªè¦æ±‚è¶…è¿‡äº†ç»ç†çš„æƒé™ï¼Œéœ€è¦æ›´é«˜çº§åˆ«å®¡æ‰¹
+// heheï¼Œæƒ³æ¶¨è–ªï¼Œä½ å¯ä»¥èµ°äº†
