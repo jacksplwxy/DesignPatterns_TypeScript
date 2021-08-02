@@ -1,6 +1,6 @@
-//´´½¨2Ì¨³µ£ºÒ»Ì¨ÊÇ±¦Âí³µ¼Ü¡¢±¦ÂíÂÖ×Ó¡¢±¦ÂíÒıÇæµÄÆû³µ£¬ÁíÒ»Ì¨ÊÇ±¦Âí³µ¼Ü¡¢±¦ÂíÂÖ×Ó¡¢±¼³ÛÒıÇæµÄÆû³µ
+//åˆ›å»º2å°è½¦ï¼šä¸€å°æ˜¯å®é©¬è½¦æ¶ã€å®é©¬è½®å­ã€å®é©¬å¼•æ“çš„æ±½è½¦ï¼Œå¦ä¸€å°æ˜¯å®é©¬è½¦æ¶ã€å®é©¬è½®å­ã€å¥”é©°å¼•æ“çš„æ±½è½¦
 
-//Æû³µÀà
+//æ±½è½¦ç±»
 class Car {
     private carBody: String
     private wheel: String
@@ -15,8 +15,8 @@ class Car {
         this.engine = engine
     }
     public show(): void {
-        //ÏÔÊ¾²úÆ·µÄÌØĞÔ
-        console.log('Æû³µµÄ×é³É·Ö±ğÎª£º', this.carBody, this.wheel, this.engine)
+        //æ˜¾ç¤ºäº§å“çš„ç‰¹æ€§
+        console.log('æ±½è½¦çš„ç»„æˆåˆ†åˆ«ä¸ºï¼š', this.carBody, this.wheel, this.engine)
     }
 }
 
@@ -29,7 +29,7 @@ abstract class Builder {
         return this.car
     }
 }
-//Æû³µ1µÄ½¨ÔìÕß
+//æ±½è½¦1çš„å»ºé€ è€…
 class ConcreteBuilder extends Builder {
     constructor() {
         super()
@@ -44,16 +44,16 @@ class ConcreteBuilder extends Builder {
         this.car.setEngine("BMWEngine")
     }
 }
-//Æû³µ2µÄ½¨ÔìÕß
+//æ±½è½¦2çš„å»ºé€ è€…
 class ConcreteBuilder1 extends Builder {
     constructor() {
         super()
     }
     public buildCarBody(): void {
-        this.car.setCarBody("BMWCarBody")
+        this.car.setCarBody("BenzCarBody")
     }
     public buildWheel(): void {
-        this.car.setWheel("BMWWheel")
+        this.car.setWheel("BenzWheel")
     }
     public buildEngine(): void {
         this.car.setEngine("BenzEngine")
@@ -68,14 +68,14 @@ class Director {
     }
 }
 
-//²âÊÔ
+//æµ‹è¯•
 class Client {
     public static main(): void {
-        //µÚÒ»Ì¨Æû³µ:´´½¨Õßbuilder
+        //ç¬¬ä¸€å°æ±½è½¦:åˆ›å»ºè€…builder
         const builder: Builder = new ConcreteBuilder()
         const car: Car = Director.getProduct(builder)
         car.show()
-        //µÚ¶şÌ¨Æû³µ:´´½¨Õßbuilder1,µ÷Õû²¿¼ş
+        //ç¬¬äºŒå°æ±½è½¦:åˆ›å»ºè€…builder1,è°ƒæ•´éƒ¨ä»¶
         const builder1: Builder = new ConcreteBuilder1()
         const car1: Car = Director.getProduct(builder1)
         car1.show()
@@ -83,4 +83,4 @@ class Client {
 }
 Client.main()
 
-//Ğ¡½á£ºÏë´´½¨Ò»¸ö±¦Âí³µ¼Ü¡¢°ÂµÏ³µÂÖ¡¢±¼³ÛÒıÇæµÄÆû³µ£¬Ò²Ö»ĞèÒªĞÂ½¨Ò»¸ö½¨ÔìÕßÀà£¬·ûºÏ¿ª±ÕÔ­Ôò
+//å°ç»“ï¼šæƒ³åˆ›å»ºä¸€ä¸ªå®é©¬è½¦æ¶ã€å¥¥è¿ªè½¦è½®ã€å¥”é©°å¼•æ“çš„æ±½è½¦ï¼Œä¹Ÿåªéœ€è¦æ–°å»ºä¸€ä¸ªå»ºé€ è€…ç±»ï¼Œç¬¦åˆå¼€é—­åŸåˆ™
